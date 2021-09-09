@@ -40,11 +40,13 @@ public class math extends org.python.types.Module {
             throw new org.python.exceptions.TypeError("Only values of x >= 0 and y >= 0 are accepted");
         }
         
-        /*if(x instanceof org.python.types.Int && y instanceof org.python.types.Int) {
-            long result = java.lang.Math.pow(((org.python.types.Int) x).value, ((org.python.types.Int) y).value);
-            return new org.python.types.Int(result);
-        }*/
+        
         double result = java.lang.Math.pow(a, b);
-        return new org.python.types.Float(result);
+        if(x instanceof org.python.types.Int && y instanceof org.python.types.Int) {
+            return org.python.types.Int.getInt((long)result);
+        } else {
+            return new org.python.types.Float(result);
+        }
+        
     }
 }
