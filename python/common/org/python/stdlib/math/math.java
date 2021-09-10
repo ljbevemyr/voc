@@ -2,17 +2,12 @@ package python;
 
 @org.python.Module(
         __doc__ =
-                "TODO"
+                "Math module"
 )
 public class math extends org.python.types.Module {
     public math() {
         super();
     }
-
-    public static org.python.Object _STRUCT_TM_ITEMS;
-
-    @org.python.Attribute
-    public static org.python.Object __file__ = new org.python.types.Str("python/common/python/math.java");
 
     @org.python.Method(
          __doc__ = "Return the square root of number",
@@ -36,7 +31,7 @@ public class math extends org.python.types.Module {
             return new org.python.types.Float(val ? 1 : 0);
         }
         else{
-            throw new org.python.exceptions.TypeError("floor() argument must be real number, not "+ number.typeName());
+            throw new org.python.exceptions.TypeError("sqrt() argument must be real number, not "+ number.typeName());
         }
         
     }
