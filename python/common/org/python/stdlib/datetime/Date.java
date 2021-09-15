@@ -54,7 +54,7 @@ public class Date extends org.python.types.Object {
 	    }
 
 	    if ((this.year instanceof org.python.types.Int) && (this.month instanceof org.python.types.Int) && (this.day instanceof org.python.types.Int)) {
-		if (1 <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= 999) {
+		if (1 <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= 9999) {
 
 		    if (1d <= ((org.python.types.Int) this.month).value && ((org.python.types.Int) this.month).value <= 12d) {
 			if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= 31d) {
@@ -105,7 +105,7 @@ public class Date extends org.python.types.Object {
 	    String d = this.day + "";
 
 	    if (!y.equals("null") && !(this.year instanceof org.python.types.Int)) {
-		throw new org.python.exceptions.TypeError("intege argument expected, got " + this.year.typeName());
+		throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
 	    }
 	    if (kwargs.get("year") != null && args.length > 0) {
 		throw new org.python.exceptions.SyntaxError("positional argument follows keyword argument");
@@ -183,7 +183,7 @@ public class Date extends org.python.types.Object {
 	return new org.python.types.Str(year + "-" + month + "-" + day);
     }
 
-    public static org.python.Object constant_4() {
+    private static org.python.Object constant_4() {
 	return org.python.types.Int.getInt(4);
     }
 
