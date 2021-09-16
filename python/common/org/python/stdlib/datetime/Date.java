@@ -105,7 +105,7 @@ public class Date extends org.python.types.Object {
 	    String d = this.day + "";
 
 	    if (!y.equals("null") && !(this.year instanceof org.python.types.Int)) {
-		throw new org.python.exceptions.TypeError("intege argument expected, got " + this.year.typeName());
+		throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
 	    }
 	    if (kwargs.get("year") != null && args.length > 0) {
 		throw new org.python.exceptions.SyntaxError("positional argument follows keyword argument");
