@@ -99,37 +99,51 @@ public class TimeDeltaTests {
     public void MultiplicationArg() {
         //TODO: Test negative values
         Map<String, Object> kwargs = new HashMap<>();
+        List<Integer> args00 = Arrays.asList(1, 1, 0, 0, 0, 0, 0);
         List<Integer> args0 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);
-        //List<Integer> args0 = Arrays.asList(1, 1, 1, 0, 0, 0, 0);
         List<Integer> args1 = Arrays.asList(0, 0, 0, 0, 0, 0, 0);
         List<Integer> args2 = Arrays.asList(0, 86399, 999999, 0, 0, 0, 0);
+        TimeDelta time00 = initDelta(args00, kwargs);
         TimeDelta time0 = initDelta(args0, kwargs);
         TimeDelta time1 = initDelta(args1, kwargs);
         TimeDelta time2 = initDelta(args2, kwargs);
-        
-        //TimeDelta timeMult0 = (TimeDelta) time0.__multiplication__(999998);
-        TimeDelta timeMult0 = (TimeDelta) time0.__multiplication__(2);
+
+        TimeDelta timeMult00 = (TimeDelta) time00.__multiplication__(999998);
+        assertEquals(org.python.types.Int.getInt(0), timeMult00.microseconds);
+        assertEquals(org.python.types.Int.getInt(49598), timeMult00.seconds);
+        assertEquals(org.python.types.Int.getInt(1000009), timeMult00.days);
+
+        TimeDelta timeMult0 = (TimeDelta) time0.__multiplication__(999998);
         assertEquals(org.python.types.Int.getInt(997998), timeMult0.microseconds);
         assertEquals(org.python.types.Int.getInt(52878), timeMult0.seconds);
+        assertEquals(org.python.types.Int.getInt(8042356), timeMult0.days);
 
         TimeDelta timeMult1 = (TimeDelta) time1.__multiplication__(123456);
-        TimeDelta timeMult2 = (TimeDelta) time2.__multiplication__(0);
-        TimeDelta timeMult3 = (TimeDelta) time2.__multiplication__(999998);
-        TimeDelta timeMult4 = (TimeDelta) time2.__multiplication__(-999998);
-        //assertEquals(org.python.types.Int.getInt(8042356), timeMult0.days);
-
         assertEquals(org.python.types.Int.getInt(0), timeMult1.days);
         assertEquals(org.python.types.Int.getInt(0), timeMult1.seconds);
         assertEquals(org.python.types.Int.getInt(0), timeMult1.microseconds);
+
+        TimeDelta timeMult2 = (TimeDelta) time2.__multiplication__(0);
         assertEquals(org.python.types.Int.getInt(0), timeMult2.days);
         assertEquals(org.python.types.Int.getInt(0), timeMult2.seconds);
         assertEquals(org.python.types.Int.getInt(0), timeMult2.microseconds);
+
+        TimeDelta timeMult3 = (TimeDelta) time2.__multiplication__(999998);
         assertEquals(org.python.types.Int.getInt(999997), timeMult3.days);
         assertEquals(org.python.types.Int.getInt(86399), timeMult3.seconds);
         assertEquals(org.python.types.Int.getInt(2), timeMult3.microseconds);
-        assertEquals(org.python.types.Int.getInt(-999998), timeMult4.days);
+
+        TimeDelta timeMult4 = (TimeDelta) time2.__multiplication__(-2);
+        assertEquals(org.python.types.Int.getInt(2), timeMult4.microseconds);
         assertEquals(org.python.types.Int.getInt(0), timeMult4.seconds);
-        assertEquals(org.python.types.Int.getInt(999998), timeMult4.microseconds);
+        assertEquals(org.python.types.Int.getInt(-2), timeMult4.days);
+
+        TimeDelta timeMult5 = (TimeDelta) time2.__multiplication__(-999998);
+        assertEquals(org.python.types.Int.getInt(999998), timeMult5.microseconds);
+        assertEquals(org.python.types.Int.getInt(0), timeMult5.seconds);
+        assertEquals(org.python.types.Int.getInt(-999998), timeMult5.days);
+
+
     }
 
     @Test
