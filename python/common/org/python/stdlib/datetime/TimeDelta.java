@@ -60,21 +60,52 @@ public class TimeDelta extends org.python.types.Object {
 	    }
 	}
 
-	if (args.length == 3) {
-	    this.days = args[0];
-	    this.seconds = args[1];
-	    this.microseconds = args[2];
-	} else if (args.length == 2) {
-	    this.days = args[0];
-	    this.seconds = args[1];
-	    this.microseconds = org.python.types.Int.getInt(0);
-
-	} else if (args.length == 1) {
-	    this.days = args[0];
-	    this.seconds = org.python.types.Int.getInt(0);
-	    this.microseconds = org.python.types.Int.getInt(0);
-
+	if (args.length == 7) {
+        long days = ((org.python.types.Int) args[0]).value + ((org.python.types.Int) args[6]).value * 7;
+	    this.days = org.python.types.Int.getInt(days);
+        long seconds = ((org.python.types.Int) args[1]).value +
+            ((org.python.types.Int) args[5]).value * 3600 + ((org.python.types.Int) args[4]).value * 60;
+	    this.seconds = org.python.types.Int.getInt(seconds);
+        long microseconds = ((org.python.types.Int) args[2]).value + ((org.python.types.Int) args[3]).value * 1000;
+	    this.microseconds = org.python.types.Int.getInt(microseconds);
 	}
+    else if (args.length == 6) {
+        this.days = args[0];
+        long seconds = ((org.python.types.Int) args[1]).value +
+            ((org.python.types.Int) args[5]).value * 3600 + ((org.python.types.Int) args[4]).value * 60;
+        this.seconds = org.python.types.Int.getInt(seconds);
+        long microseconds = ((org.python.types.Int) args[2]).value + ((org.python.types.Int) args[3]).value * 1000;
+        this.microseconds = org.python.types.Int.getInt(microseconds);
+	}
+    else if (args.length == 5) {
+        this.days = args[0];
+        long seconds = ((org.python.types.Int) args[1]).value + ((org.python.types.Int) args[4]).value * 60;
+        this.seconds = org.python.types.Int.getInt(seconds);
+        long microseconds = ((org.python.types.Int) args[2]).value + ((org.python.types.Int) args[3]).value * 1000;
+        this.microseconds = org.python.types.Int.getInt(microseconds);
+	}
+    else if (args.length == 4) {
+        this.days = args[0];
+        this.seconds = args[1];
+        long microseconds = ((org.python.types.Int) args[2]).value + ((org.python.types.Int) args[3]).value * 1000;
+        this.microseconds = org.python.types.Int.getInt(microseconds);
+    }
+    else if (args.length == 3) {
+        this.days = args[0];
+        this.seconds = args[1];
+        this.microseconds = args[2];
+    }
+    else if (args.length == 2) {
+        this.days = args[0];
+        this.seconds = args[1];
+        this.microseconds = org.python.types.Int.getInt(0);
+    }
+    else if (args.length == 1) {
+        this.days = args[0];
+        this.seconds = org.python.types.Int.getInt(0);
+        this.microseconds = org.python.types.Int.getInt(0);
+    }
+
 	if (kwargs.get("weeks") != null) {
 	    long weeks = ((org.python.types.Int) kwargs.get("weeks")).value;
 	    long day = ((org.python.types.Int) this.days).value;
@@ -82,11 +113,11 @@ public class TimeDelta extends org.python.types.Object {
 	    this.days = org.python.types.Int.getInt(day);
 	}
     if (kwargs.get("days") != null) {
-        long days = ((org.python.types.Int) kwargs.get("days")).value;
-        long day = ((org.python.types.Int) this.days).value;
-        day = days + day;
-        System.out.println(day);
-        this.days = org.python.types.Int.getInt(day);
+        long daysNew = ((org.python.types.Int) kwargs.get("days")).value;
+        long daysOld = ((org.python.types.Int) this.days).value;
+        daysNew = daysNew + daysOld;
+        System.out.println(daysNew);
+        this.days = org.python.types.Int.getInt(daysNew);
     }
 
 	if (kwargs.get("hours") != null) {
@@ -103,12 +134,25 @@ public class TimeDelta extends org.python.types.Object {
 	    this.seconds = org.python.types.Int.getInt(minute);
 	}
 
+    if (kwargs.get("seconds") != null) {
+        long secondsNew = ((org.python.types.Int) kwargs.get("seconds")).value;
+        long secondsOld = ((org.python.types.Int) this.seconds).value;
+        secondsNew = secondsNew + secondsOld;
+        this.seconds = org.python.types.Int.getInt(secondsNew);
+    }
+
 	if (kwargs.get("milliseconds") != null) {
 	    long millisecond = ((org.python.types.Int) kwargs.get("milliseconds")).value;
 	    long mili = ((org.python.types.Int) this.microseconds).value;
-	    mili = mili + millisecond * 100;
+	    mili = mili + millisecond * 1000;
 	    this.microseconds = org.python.types.Int.getInt(mili);
 	}
+    if (kwargs.get("microseconds") != null) {
+        long microsecondsNew = ((org.python.types.Int) kwargs.get("microseconds")).value;
+        long microsecondsOld = ((org.python.types.Int) this.microseconds).value;
+        microsecondsNew = microsecondsNew + microsecondsOld;
+        this.microseconds = org.python.types.Int.getInt(microsecondsNew);
+    }
     }
 
     @org.python.Method(__doc__ = "returns days")
@@ -179,9 +223,213 @@ public class TimeDelta extends org.python.types.Object {
 	long sumDays = thisDays + otherDays;
 	long sumSeconds = thisSeconds + otherSeconds;
 	long sumMicroseconds = thisMicroseconds + otherMicroSeconds;
+    if (sumMicroseconds > 999999) {
+        long extraSeconds = sumMicroseconds / 1000000;
+        sumMicroseconds = sumMicroseconds % 1000000;
+        sumSeconds = sumSeconds + extraSeconds;
+    }
+    if (sumSeconds > 86399) {
+        long extraDays = sumSeconds / 86400;
+        sumSeconds = sumSeconds % 86400;
+        sumDays = sumDays + extraDays;
+    }
 	org.python.Object[] args = { org.python.types.Int.getInt(sumDays), org.python.types.Int.getInt(sumSeconds), org.python.types.Int.getInt(sumMicroseconds) };
 	TimeDelta TD = new TimeDelta(args, Collections.EMPTY_MAP);
 	return TD;
+    }
+
+    @org.python.Method(__doc__ = "", args = { "other" })
+    public org.python.Object __difference__(org.python.Object other) {
+        long thisDays = ((org.python.types.Int) this.days).value;
+        TimeDelta otherObject = (org.python.stdlib.datetime.TimeDelta) other;
+        long otherDays = ((org.python.types.Int) otherObject.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long otherSeconds = ((org.python.types.Int) otherObject.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long otherMicroSeconds = ((org.python.types.Int) otherObject.microseconds).value;
+        long sumDays = thisDays - otherDays;
+        long sumSeconds = thisSeconds - otherSeconds;
+        long sumMicroseconds = thisMicroseconds - otherMicroSeconds;
+        if (sumMicroseconds < 0) {
+            sumSeconds = sumSeconds -1;
+            sumMicroseconds = 1000000 + sumMicroseconds;
+        }
+        if (sumSeconds < 0) {
+            sumDays = sumDays -1;
+            sumSeconds = 86400 + sumSeconds;
+        }
+        org.python.Object[] args = { org.python.types.Int.getInt(sumDays), org.python.types.Int.getInt(sumSeconds), org.python.types.Int.getInt(sumMicroseconds) };
+        TimeDelta TD = new TimeDelta(args, Collections.EMPTY_MAP);
+        return TD;
+    }
+
+    @org.python.Method(__doc__ = "", args = { "constant" })
+    public org.python.Object __multiplication__(long constant) {
+        long thisDays = ((org.python.types.Int) this.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long sumMicroseconds = thisMicroseconds * constant;
+        long sumSeconds = thisSeconds;
+        long sumDays = thisDays;
+        System.out.println("----");
+        System.out.println("sumMicroseconds: " + sumMicroseconds);
+        System.out.println("sumSeconds: " + sumSeconds);
+        if (sumMicroseconds < 0) {
+            long extraSeconds = sumMicroseconds / 1000000;
+            sumMicroseconds = -(sumMicroseconds % 1000000);
+            sumSeconds = sumSeconds + extraSeconds;
+            System.out.println("sumSeconds0: " + sumSeconds);
+        } else if (sumMicroseconds > 999999) {
+            long extraSeconds = sumMicroseconds / 1000000;
+            System.out.println("extraSeconds: " + extraSeconds);
+            sumMicroseconds = sumMicroseconds % 1000000;
+            sumSeconds = sumSeconds + extraSeconds;
+            System.out.println("sumSeconds1: " + sumSeconds);
+        }
+        sumSeconds = sumSeconds * constant;
+        System.out.println("sumMicroseconds1: " + sumMicroseconds);
+        System.out.println("sumSeconds2: " + sumSeconds);
+
+        System.out.println(sumDays);
+        if (sumSeconds < 0) {
+            long extraDays = sumSeconds / 86400;
+            System.out.println(extraDays);
+            sumSeconds = -(sumSeconds % 86400);
+            sumDays = sumDays + extraDays;
+
+            System.out.println(sumDays);
+        } else if (sumSeconds > 86399) {
+            long extraDays = sumSeconds / 86400;
+            System.out.println("extraDays: " + extraDays);
+            sumSeconds = sumSeconds % 86400;
+            System.out.println("sumSeconds3: " + sumSeconds);
+            sumDays = sumDays + extraDays;
+        }
+        sumDays = sumDays * constant;
+        org.python.Object[] args = { org.python.types.Int.getInt(sumDays), org.python.types.Int.getInt(sumSeconds), org.python.types.Int.getInt(sumMicroseconds) };
+        TimeDelta TD = new TimeDelta(args, Collections.EMPTY_MAP);
+        return TD;
+    }
+
+    @org.python.Method(__doc__ = "", args = { "other" })
+    public Boolean __equal__(org.python.Object other) {
+        //FIXME: May be more robust to convert everyting to microseconds
+        TimeDelta otherObject = (org.python.stdlib.datetime.TimeDelta) other;
+        long thisDays = ((org.python.types.Int) this.days).value;
+        long otherDays = ((org.python.types.Int) otherObject.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long otherSeconds = ((org.python.types.Int) otherObject.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long otherMicroseconds = ((org.python.types.Int) otherObject.microseconds).value;
+        Boolean days = thisDays == otherDays;
+        Boolean seconds = thisSeconds == otherSeconds;
+        Boolean microseconds = thisMicroseconds == otherMicroseconds;
+        return (days && seconds && microseconds);
+    }
+
+    @org.python.Method(__doc__ = "", args = { "other" })
+    public Boolean __notEqual__(org.python.Object other) {
+        TimeDelta otherObject = (org.python.stdlib.datetime.TimeDelta) other;
+        long thisDays = ((org.python.types.Int) this.days).value;
+        long otherDays = ((org.python.types.Int) otherObject.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long otherSeconds = ((org.python.types.Int) otherObject.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long otherMicroseconds = ((org.python.types.Int) otherObject.microseconds).value;
+        Boolean days = thisDays != otherDays;
+        Boolean seconds = thisSeconds != otherSeconds;
+        Boolean microseconds = thisMicroseconds != otherMicroseconds;
+        return (days || seconds || microseconds);
+    }
+
+    @org.python.Method(__doc__ = "", args = { "other" })
+    public Boolean __lessThan__(org.python.Object other) {
+        TimeDelta otherObject = (org.python.stdlib.datetime.TimeDelta) other;
+        long thisDays = ((org.python.types.Int) this.days).value;
+        long otherDays = ((org.python.types.Int) otherObject.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long otherSeconds = ((org.python.types.Int) otherObject.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long otherMicroseconds = ((org.python.types.Int) otherObject.microseconds).value;
+        if (thisDays < otherDays) {
+            return true;
+        }
+        if (thisSeconds < otherSeconds) {
+            return true;
+        }
+        if (thisMicroseconds < otherMicroseconds) {
+            return true;
+        }
+        return false;
+    }
+
+    @org.python.Method(__doc__ = "", args = { "other" })
+    public Boolean __lessOrEqualThan__(org.python.Object other) {
+        TimeDelta otherObject = (org.python.stdlib.datetime.TimeDelta) other;
+        long thisDays = ((org.python.types.Int) this.days).value;
+        long otherDays = ((org.python.types.Int) otherObject.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long otherSeconds = ((org.python.types.Int) otherObject.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long otherMicroseconds = ((org.python.types.Int) otherObject.microseconds).value;
+        if (thisDays < otherDays) {
+            return true;
+        }
+        if (thisSeconds < otherSeconds) {
+            return true;
+        }
+        if (thisMicroseconds < otherMicroseconds) {
+            return true;
+        }
+        Boolean days = thisDays == otherDays;
+        Boolean seconds = thisSeconds == otherSeconds;
+        Boolean microseconds = thisMicroseconds == otherMicroseconds;
+        return (days && seconds && microseconds);
+    }
+
+    @org.python.Method(__doc__ = "", args = { "other" })
+    public Boolean __greaterThan__(org.python.Object other) {
+        TimeDelta otherObject = (org.python.stdlib.datetime.TimeDelta) other;
+        long thisDays = ((org.python.types.Int) this.days).value;
+        long otherDays = ((org.python.types.Int) otherObject.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long otherSeconds = ((org.python.types.Int) otherObject.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long otherMicroseconds = ((org.python.types.Int) otherObject.microseconds).value;
+        if (thisDays > otherDays) {
+            return true;
+        }
+        if (thisSeconds > otherSeconds) {
+            return true;
+        }
+        if (thisMicroseconds > otherMicroseconds) {
+            return true;
+        }
+        return false;
+    }
+
+    @org.python.Method(__doc__ = "", args = { "other" })
+    public Boolean __greaterOrEqualThan__(org.python.Object other) {
+        TimeDelta otherObject = (org.python.stdlib.datetime.TimeDelta) other;
+        long thisDays = ((org.python.types.Int) this.days).value;
+        long otherDays = ((org.python.types.Int) otherObject.days).value;
+        long thisSeconds = ((org.python.types.Int) this.seconds).value;
+        long otherSeconds = ((org.python.types.Int) otherObject.seconds).value;
+        long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+        long otherMicroseconds = ((org.python.types.Int) otherObject.microseconds).value;
+        if (thisDays > otherDays) {
+            return true;
+        }
+        if (thisSeconds > otherSeconds) {
+            return true;
+        }
+        if (thisMicroseconds > otherMicroseconds) {
+            return true;
+        }
+        Boolean days = thisDays == otherDays;
+        Boolean seconds = thisSeconds == otherSeconds;
+        Boolean microseconds = thisMicroseconds == otherMicroseconds;
+        return (days && seconds && microseconds);
     }
 
     public org.python.Object __pos__() {
