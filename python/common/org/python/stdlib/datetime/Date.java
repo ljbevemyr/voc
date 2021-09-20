@@ -54,7 +54,7 @@ public class Date extends org.python.types.Object {
 	    }
 
 	    if ((this.year instanceof org.python.types.Int) && (this.month instanceof org.python.types.Int) && (this.day instanceof org.python.types.Int)) {
-		if (1 <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= 9999) {
+		if (python.datetime.MINYEAR.value <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= python.datetime.MAXYEAR.value) {
 
 		    if (1d <= ((org.python.types.Int) this.month).value && ((org.python.types.Int) this.month).value <= 12d) {
 			if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= 31d) {
@@ -183,10 +183,6 @@ public class Date extends org.python.types.Object {
 	return new org.python.types.Str(year + "-" + month + "-" + day);
     }
 
-    private static org.python.Object constant_4() {
-	return org.python.types.Int.getInt(4);
-    }
-
     @org.python.Method(__doc__ = "")
     public org.python.types.Str __year__() {
 	return new org.python.types.Str(this.year + "");
@@ -263,5 +259,145 @@ public class Date extends org.python.types.Object {
 	int[] convertToPython = { 6, 0, 1, 2, 3, 4, 5 };
 	return org.python.types.Int.getInt(convertToPython[day - 1]);
 
+    }
+
+    private boolean equals(Date x) {
+        long year1 = ((org.python.types.Int) this.year).value;
+        long month1 = ((org.python.types.Int) this.month).value;
+        long day1 = ((org.python.types.Int) this.day).value;
+        long year2 = ((org.python.types.Int) x.year).value;
+        long month2 = ((org.python.types.Int) x.month).value;
+        long day2 = ((org.python.types.Int) x.day).value;
+        return year1 == year2 && month1 == month2 && day1 == day2;
+    }
+
+    private boolean lessThan(Date x) {
+        long year1 = ((org.python.types.Int) this.year).value;
+        long month1 = ((org.python.types.Int) this.month).value;
+        long day1 = ((org.python.types.Int) this.day).value;
+        long year2 = ((org.python.types.Int) x.year).value;
+        long month2 = ((org.python.types.Int) x.month).value;
+        long day2 = ((org.python.types.Int) x.day).value;
+        return year1 < year2 || (year1 == year2 && month1 < month2) || (year1 == year2 && month1 == month2 && day1 < day2);
+    }
+
+    @org.python.Method(__doc__ = "")
+    public org.python.Object __eq__(org.python.Object x) {
+        if (x instanceof Date) {
+            return org.python.types.Bool.getBool(this.equals((Date) x));
+        }
+        else {
+            throw new org.python.exceptions.TypeError("incompatible datatype("+x.typeName()+")");
+        }
+    }
+
+    @org.python.Method(__doc__ = "")
+    public org.python.Object __ne__(org.python.Object x) {
+        if (x instanceof Date) {
+            return org.python.types.Bool.getBool(!(this.equals((Date) x)));
+        }
+        else {
+            throw new org.python.exceptions.TypeError("incompatible datatype("+x.typeName()+")");
+        }
+    }
+
+    @org.python.Method(__doc__ = "")
+    public org.python.Object __gt__(org.python.Object x) {
+        if (x instanceof Date) {
+            return org.python.types.Bool.getBool(!(this.lessThan((Date) x)) && !(this.equals((Date) x)));
+        }
+        else {
+            throw new org.python.exceptions.TypeError("incompatible datatype("+x.typeName()+")");
+        }
+    }
+
+    @org.python.Method(__doc__ = "")
+    public org.python.Object __lt__(org.python.Object x) {
+        if (x instanceof Date) {
+            return org.python.types.Bool.getBool(this.lessThan((Date) x));
+        }
+        else {
+            throw new org.python.exceptions.TypeError("incompatible datatype("+x.typeName()+")");
+        }
+    }
+
+    @org.python.Method(__doc__ = "")
+    public org.python.Object __ge__(org.python.Object x) {
+        if (x instanceof Date) {
+            return org.python.types.Bool.getBool(!(this.lessThan((Date) x)));
+        }
+        else {
+            throw new org.python.exceptions.TypeError("incompatible datatype("+x.typeName()+")");
+        }
+    }
+
+    @org.python.Method(__doc__ = "")
+    public org.python.Object __le__(org.python.Object x) {
+        if (x instanceof Date) {
+            return org.python.types.Bool.getBool(this.lessThan((Date) x) || this.equals((Date) x));
+        }
+        else {
+            throw new org.python.exceptions.TypeError("incompatible datatype("+x.typeName()+")");
+        }
+    }
+
+    @org.python.Method(__doc__ = "")
+    public org.python.Object replace(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
+
+        if (args.length + kwargs.size() > 3) {
+            int val = args.length + kwargs.size();
+            throw new org.python.exceptions.TypeError("function takes at most 3 arguments (" + val + " given)");
+        }
+
+        if (kwargs.get("year") != null) {
+            this.year = kwargs.get("year");
+        } else if (args.length > 0) {
+            this.year = args[0];
+        }
+
+        if (kwargs.get("month") != null) {
+            this.month = kwargs.get("month");
+        }
+        else {
+            this.month = args[1];
+        }
+        if (kwargs.get("day") != null) {
+            this.day = kwargs.get("day");
+        }
+        else {
+            this.month = args[2];
+        }
+
+        if ((this.year instanceof org.python.types.Int) && (this.month instanceof org.python.types.Int) && (this.day instanceof org.python.types.Int)) {
+            if (python.datetime.MINYEAR.value <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= python.datetime.MAXYEAR.value) {
+
+                if (1d <= ((org.python.types.Int) this.month).value && ((org.python.types.Int) this.month).value <= 12d) {
+                    if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= 31d) {
+                    } else {
+                        throw new org.python.exceptions.ValueError("day is out of range for month");
+                    }
+                } else {
+                    throw new org.python.exceptions.ValueError("month must be in 1..12");
+                }
+            } else {
+                throw new org.python.exceptions.ValueError("year " + this.year + " is out of range");
+            }
+        } else {
+            if (!(this.year instanceof org.python.types.Int)) {
+                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.year.typeName());
+            }
+            if (!(this.month instanceof org.python.types.Int)) {
+                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.month.typeName());
+            }
+            if (!(this.day instanceof org.python.types.Int)) {
+                throw new org.python.exceptions.TypeError("integer argument expected, got " + this.day.typeName());
+            }
+        }
+
+
+
+
+
+        return this;
     }
 }
