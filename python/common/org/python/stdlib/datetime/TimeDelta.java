@@ -47,7 +47,7 @@ public class TimeDelta extends org.python.types.Object {
 	    }
 	    if (args.length > 0) {
 		if (kwargs.get("days") != null && args.length >= 1) {
-		    throw new org.python.exceptions.TypeError("Argument given by name ('days') and position (1)");
+		    throw new org.python.exceptions.TypeError("AAAAArgument given by name ('days') and position (1)");
 		}
 
 		if (kwargs.get("seconds") != null && args.length >= 2) {
@@ -75,13 +75,19 @@ public class TimeDelta extends org.python.types.Object {
 	    this.microseconds = org.python.types.Int.getInt(0);
 
 	}
-
 	if (kwargs.get("weeks") != null) {
 	    long weeks = ((org.python.types.Int) kwargs.get("weeks")).value;
 	    long day = ((org.python.types.Int) this.days).value;
 	    day = day + weeks * 7;
 	    this.days = org.python.types.Int.getInt(day);
 	}
+    if (kwargs.get("days") != null) {
+        long days = ((org.python.types.Int) kwargs.get("days")).value;
+        long day = ((org.python.types.Int) this.days).value;
+        day = days + day;
+        System.out.println(day);
+        this.days = org.python.types.Int.getInt(day);
+    }
 
 	if (kwargs.get("hours") != null) {
 	    long hours = ((org.python.types.Int) kwargs.get("hours")).value;
