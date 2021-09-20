@@ -1,5 +1,6 @@
 package org.python.stdlib.datetime;
 
+import java.lang.Math;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -272,38 +273,29 @@ public class TimeDelta extends org.python.types.Object {
         long sumSeconds = thisSeconds * constant;
         long sumDays = thisDays * constant;
 
-        System.out.println("----");
-        System.out.println("sumMicroseconds: " + sumMicroseconds);
-        //System.out.println("sumSeconds: " + sumSeconds);
         if (sumMicroseconds < 0) {
-            long extraSeconds = sumMicroseconds / 1000000;
-            System.out.println("sumMicroseconds1: " + sumMicroseconds);
-            sumMicroseconds = -(sumMicroseconds % 1000000);
-            System.out.println("sumMicroseconds2: " + sumMicroseconds);
-            sumSeconds = sumSeconds + extraSeconds;
-            //System.out.println("sumSeconds0: " + sumSeconds);
+            long extraSeconds = (long) Math.ceil(-((double) sumMicroseconds / 1000000));
+            sumMicroseconds = (-1 * sumMicroseconds) % 1000000;
+            if (sumMicroseconds != 0 ) {
+                sumMicroseconds = 1000000 - (sumMicroseconds);
+            }
+            sumSeconds = sumSeconds - extraSeconds;
         } else if (sumMicroseconds > 999999) {
             long extraSeconds = sumMicroseconds / 1000000;
-            //System.out.println("extraSeconds: " + extraSeconds);
             sumMicroseconds = sumMicroseconds % 1000000;
             sumSeconds = sumSeconds + extraSeconds;
-            //System.out.println("sumSeconds1: " + sumSeconds);
         }
-        System.out.println("sumMicroseconds3: " + sumMicroseconds);
-        //System.out.println("sumSeconds2: " + sumSeconds);
 
-        //System.out.println("sumDays: " + sumDays);
         if (sumSeconds < 0) {
-            long extraDays = sumSeconds / 86400;
-            System.out.println(extraDays);
-            sumSeconds = -(sumSeconds % 86400);
-            sumDays = sumDays + extraDays;
-            System.out.println(sumDays);
+            long extraDays = (long) Math.ceil(-((double) sumSeconds / 86400));
+            sumSeconds = (-1 * sumSeconds) % 86400;
+            if (sumSeconds != 0) {
+                sumSeconds = 86400 - sumSeconds;
+            }
+            sumDays = sumDays - extraDays;
         } else if (sumSeconds > 86399) {
             long extraDays = sumSeconds / 86400;
-            //System.out.println("extraDays: " + extraDays);
             sumSeconds = sumSeconds % 86400;
-            //System.out.println("sumSeconds3: " + sumSeconds);
             sumDays = sumDays + extraDays;
         }
         org.python.Object[] args = { org.python.types.Int.getInt(sumDays), org.python.types.Int.getInt(sumSeconds), org.python.types.Int.getInt(sumMicroseconds) };
