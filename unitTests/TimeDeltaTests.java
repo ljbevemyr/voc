@@ -1,7 +1,9 @@
 import org.junit.Test;
 import org.python.Object;
+import org.python.exceptions.TypeError;
 import org.python.stdlib.datetime.TimeDelta;
 import org.python.types.Int;
+import org.python.types.Str;
 
 import java.util.*;
 
@@ -49,9 +51,41 @@ public class TimeDeltaTests {
         Map<String, Object> kwargs = new HashMap<>();
         List<Integer> args = Arrays.asList(1, -20000, -200000, 0, 0, 0, 0);
         TimeDelta time = initDelta(args, kwargs);
-        //assertEquals(org.python.types.Int.getInt(0),time.days);
-        //assertEquals(org.python.types.Int.getInt(66399),time.seconds);
-        //assertEquals(org.python.types.Int.getInt(800000),time.microseconds);
+        assertEquals(org.python.types.Int.getInt(0),time.days);
+        assertEquals(org.python.types.Int.getInt(66399),time.seconds);
+        assertEquals(org.python.types.Int.getInt(800000),time.microseconds);
+    }
+
+    @Test
+    public void BigValuesArg(){
+        Map<String, Object> kwargs = new HashMap<>();
+        List<Integer> args = Arrays.asList(1, 20000, 1000000, 0, 0, 0, 0);
+        TimeDelta time = initDelta(args, kwargs);
+        assertEquals(org.python.types.Int.getInt(1),time.days);
+        assertEquals(org.python.types.Int.getInt(20001),time.seconds);
+        assertEquals(org.python.types.Int.getInt(0),time.microseconds);
+    }
+
+    @Test
+    public void WrongValuesArg(){
+        Map<String, Object> kwargs = new HashMap<>();
+        kwargs.put("days", Int.getInt(1));
+        kwargs.put("seconds", Int.getInt(1));
+        kwargs.put("microseconds", Int.getInt(1));
+        kwargs.put("milliseconds", Int.getInt(1));
+        kwargs.put("minutes", Int.getInt(1));
+        kwargs.put("hours", Int.getInt(1));
+        kwargs.put("weeks", Int.getInt(1));
+
+        Map<String, Object> kwargsWrongKey = new HashMap<>();
+        kwargsWrongKey.put("weeksss", Int.getInt(1));
+
+        List<Integer> args = Arrays.asList(1, 20000, 1000000, 0, 0, 0, 0);
+        List<Integer> args0 = Arrays.asList();
+        TypeError error = assertThrows(TypeError.class, () -> initDelta(args, kwargs));
+        assertEquals("Argument given by name ('days') and position (1)", error.getMessage());
+        TypeError error0 = assertThrows(TypeError.class, () -> initDelta(args0, kwargsWrongKey));
+        assertEquals("weeksss is an invalid keyword argument for this function", error0.getMessage());
     }
 
     @Test
@@ -97,7 +131,6 @@ public class TimeDeltaTests {
 
     @Test
     public void MultiplicationArg() {
-        //TODO: Test negative values
         Map<String, Object> kwargs = new HashMap<>();
         List<Integer> args00 = Arrays.asList(1, 1, 0, 0, 0, 0, 0);
         List<Integer> args0 = Arrays.asList(1, 1, 1, 1, 1, 1, 1);

@@ -42,13 +42,13 @@ public class TimeDelta extends org.python.types.Object {
 	    for (java.lang.String key : kwargs.keySet()) {
 		correct = allowedList.contains(key);
 		if (!correct) {
-		    throw new org.python.exceptions.TypeError(key + " is an invalid keuword argument for this function");
+		    throw new org.python.exceptions.TypeError(key + " is an invalid keyword argument for this function");
 
 		}
 	    }
 	    if (args.length > 0) {
 		if (kwargs.get("days") != null && args.length >= 1) {
-		    throw new org.python.exceptions.TypeError("AAAAArgument given by name ('days') and position (1)");
+		    throw new org.python.exceptions.TypeError("Argument given by name ('days') and position (1)");
 		}
 
 		if (kwargs.get("seconds") != null && args.length >= 2) {
@@ -154,6 +154,39 @@ public class TimeDelta extends org.python.types.Object {
         microsecondsNew = microsecondsNew + microsecondsOld;
         this.microseconds = org.python.types.Int.getInt(microsecondsNew);
     }
+
+    long thisDays = ((org.python.types.Int) this.days).value;
+    long thisSeconds = ((org.python.types.Int) this.seconds).value;
+    long thisMicroseconds = ((org.python.types.Int) this.microseconds).value;
+
+    if (thisMicroseconds < 0) {
+        long extraSeconds = (long) Math.ceil(-((double) thisMicroseconds / 1000000));
+        thisMicroseconds = (-1 * thisMicroseconds) % 1000000;
+        if (thisMicroseconds != 0 ) {
+            thisMicroseconds = 1000000 - (thisMicroseconds);
+        }
+        thisSeconds = thisSeconds - extraSeconds;
+    } else if (thisMicroseconds > 999999) {
+        long extraSeconds = thisMicroseconds / 1000000;
+        thisMicroseconds = thisMicroseconds % 1000000;
+        thisSeconds = thisSeconds + extraSeconds;
+    }
+    if (thisSeconds < 0) {
+        long extraDays = (long) Math.ceil(-((double) thisSeconds / 86400));
+        thisSeconds = (-1 * thisSeconds) % 86400;
+        if (thisSeconds != 0) {
+            thisSeconds = 86400 - thisSeconds;
+        }
+        thisDays = thisDays - extraDays;
+    } else if (thisSeconds > 86399) {
+        long extraDays = thisSeconds / 86400;
+        thisSeconds = thisSeconds % 86400;
+        thisDays = thisDays + extraDays;
+    }
+
+    this.microseconds = org.python.types.Int.getInt(thisMicroseconds);
+    this.seconds = org.python.types.Int.getInt(thisSeconds);
+    this.days = org.python.types.Int.getInt(thisDays);
     }
 
     @org.python.Method(__doc__ = "returns days")
@@ -285,7 +318,6 @@ public class TimeDelta extends org.python.types.Object {
             sumMicroseconds = sumMicroseconds % 1000000;
             sumSeconds = sumSeconds + extraSeconds;
         }
-
         if (sumSeconds < 0) {
             long extraDays = (long) Math.ceil(-((double) sumSeconds / 86400));
             sumSeconds = (-1 * sumSeconds) % 86400;
