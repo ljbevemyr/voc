@@ -243,17 +243,35 @@ class DateTest {
         kwargs.put("day", org.python.types.Int.getInt(30));
 
         org.python.Object[] args2 = {};
-        assertEquals(new org.python.types.Str("2021-09-30"),date1.replace(args2, kwargs).__repr__());
-
-
-        org.python.Object[] args3 = { org.python.types.Int.getInt(2021), org.python.types.Int.getInt(9), org.python.types.Int.getInt(19)};
-        Date date2 = new Date(args3, Collections.emptyMap());
+        assertEquals(new org.python.types.Str("2021-09-30"),date1.replace(kwargs).__repr__());
+        Date date2 = new Date(args1, Collections.emptyMap());
 
         java.util.Map<java.lang.String, org.python.Object> kwargs2 = new java.util.HashMap<>();
-        kwargs.put("day", org.python.types.Int.getInt(50));
+        kwargs2.put("day", org.python.types.Int.getInt(50));
+
         Exception exception = assertThrows(org.python.exceptions.ValueError.class,
-            () -> date1.replace(args2, kwargs2));
+            () -> date2.replace(kwargs2));
+
         assertEquals("day is out of range for month", exception.getMessage());
+
+        java.util.Map<java.lang.String, org.python.Object> kwargs3 = new java.util.HashMap<>();
+        kwargs3.put("day", new org.python.types.Str("6"));
+
+        Exception exception2 = assertThrows(org.python.exceptions.TypeError.class,
+            () -> date2.replace(kwargs3));
+
+        assertEquals("integer argument expected, got str", exception2.getMessage());
+    }
+
+    @Test
+    public void test_fromisoformat(){
+
+        org.python.types.Str str1 = new org.python.types.Str("2021-09-21");
+        assertEquals(new org.python.types.Str("2021-09-21"), Date.fromisoformat(str1).__repr__());
+
+        org.python.types.Str str2 = new org.python.types.Str("-200-12-01");
+        Exception exception2 = assertThrows(org.python.exceptions.ValueError.class, () -> Date.fromisoformat(str2));
+        assertEquals("Invalid string format", exception2.getMessage());
     }
 
 }
