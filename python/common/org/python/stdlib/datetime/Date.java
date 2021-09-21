@@ -342,35 +342,28 @@ public class Date extends org.python.types.Object {
     }
 
     @org.python.Method(__doc__ = "")
-    public org.python.Object replace(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
+    public org.python.Object replace(java.util.Map<java.lang.String, org.python.Object> kwargs) {
 
-        if (args.length + kwargs.size() > 3) {
-            int val = args.length + kwargs.size();
+        if (kwargs.size() > 3) {
+            int val = kwargs.size();
             throw new org.python.exceptions.TypeError("function takes at most 3 arguments (" + val + " given)");
         }
-
-        if (kwargs.get("year") != null) {
-            this.year = kwargs.get("year");
-        } else if (args.length > 0) {
-            this.year = args[0];
+        if (kwargs.size() == 0) {
+            throw new org.python.exceptions.TypeError("function takes at least one argument");
         }
-
-        if (kwargs.get("month") != null) {
+        if (kwargs.get("year") != null){
+            this.year = kwargs.get("year");
+        }
+        if (kwargs.get("month") != null){
             this.month = kwargs.get("month");
         }
-        else {
-            this.month = args[1];
-        }
-        if (kwargs.get("day") != null) {
+        if (kwargs.get("day") != null){
             this.day = kwargs.get("day");
-        }
-        else {
-            this.month = args[2];
         }
 
         if ((this.year instanceof org.python.types.Int) && (this.month instanceof org.python.types.Int) && (this.day instanceof org.python.types.Int)) {
-            if (python.datetime.MINYEAR.value <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= python.datetime.MAXYEAR.value) {
 
+            if (python.datetime.MINYEAR.value <= ((org.python.types.Int) this.year).value && ((org.python.types.Int) this.year).value <= python.datetime.MAXYEAR.value) {
                 if (1d <= ((org.python.types.Int) this.month).value && ((org.python.types.Int) this.month).value <= 12d) {
                     if (1d <= ((org.python.types.Int) this.day).value && ((org.python.types.Int) this.day).value <= 31d) {
                     } else {
@@ -393,11 +386,31 @@ public class Date extends org.python.types.Object {
                 throw new org.python.exceptions.TypeError("integer argument expected, got " + this.day.typeName());
             }
         }
-
-
-
-
-
         return this;
+    }
+
+    @org.python.Method(__doc__ = "")
+    public static org.python.Object fromisoformat(org.python.Object string) {
+        if (string instanceof org.python.types.Str) {
+            String date = ((org.python.types.Str) string).value;
+            if (date.length() == 10
+                && Character.isDigit(date.charAt(0)) && Character.isDigit(date.charAt(1)) && Character.isDigit(date.charAt(2)) && Character.isDigit(date.charAt(3))
+                && date.charAt(4) == '-'
+                && Character.isDigit(date.charAt(5)) && Character.isDigit(date.charAt(6))
+                && date.charAt(7) == '-'
+                && Character.isDigit(date.charAt(8)) && Character.isDigit(date.charAt(9))) {
+                    long year = Long.parseLong(date.substring(0, 4));
+                    long month = Long.parseLong(date.substring(5, 7));
+                    long day = Long.parseLong(date.substring(8, 10));
+                    org.python.Object[] args = {org.python.types.Int.getInt(year), org.python.types.Int.getInt(month), org.python.types.Int.getInt(day)};
+                    return new Date(args, Collections.emptyMap());
+            }
+            else {
+                throw new org.python.exceptions.ValueError("Invalid string format");
+            }
+        }
+        else {
+            throw new org.python.exceptions.TypeError("Invalid Datatype");
+        }
     }
 }
