@@ -738,12 +738,12 @@ public class Python {
             }
         }
         org.python.Object increment = org.python.types.Int.getInt(1);
-        java.util.List enumList = new java.util.ArrayList();
+        java.util.LinkedList enumList = new java.util.LinkedList<>();
         try {
             org.python.Object iter = org.Python.iter(items);
             while (true) {
                 try {
-                    java.util.List tuple = new java.util.ArrayList();
+                    java.util.LinkedList tuple = new java.util.LinkedList<>();
                     tuple.add(index);
                     tuple.add(iter.__next__());
                     org.python.types.Tuple pythonTuple = new org.python.types.Tuple(tuple);
@@ -1702,7 +1702,7 @@ public class Python {
                 reverse = org.python.types.Bool.FALSE;
             }
             org.python.Object iterator = org.Python.iter(iterable);
-            java.util.List<org.python.Object> generated = new java.util.ArrayList<org.python.Object>();
+            java.util.LinkedList<org.python.Object> generated = new java.util.LinkedList<org.python.Object>();
             try {
                 while (true) {
                     org.python.Object next = iterator.__next__();
@@ -1814,7 +1814,7 @@ public class Python {
             varargs = "moreItems"
     )
     public static org.python.Object zip(org.python.Object item, org.python.types.Tuple moreItems) {
-        java.util.List result = new java.util.ArrayList();
+        java.util.LinkedList result = new java.util.LinkedList<>();
         int count = 0;
         if (item != null) {
             count = 1;
@@ -1824,7 +1824,7 @@ public class Python {
             } catch (org.python.exceptions.TypeError e) {
                 throw new org.python.exceptions.TypeError("zip argument #" + count + " must support iteration");
             }
-            java.util.List<org.python.Object> iters = new java.util.ArrayList<org.python.Object>();
+            java.util.LinkedList<org.python.Object> iters = new java.util.LinkedList<org.python.Object>();
             iters.add(iter);
             if (moreItems != null) {
                 org.python.Object tupIter = org.Python.iter(moreItems);
@@ -1847,7 +1847,7 @@ public class Python {
             }
             boolean flag = false;
             while (true) {
-                java.util.List tuple = new java.util.ArrayList();
+                java.util.LinkedList tuple = new java.util.LinkedList<>();
                 for (int i = 0; i < count - 1; i++) {
                     try {
                         org.python.Object it = iters.get(i);

@@ -4,9 +4,11 @@ import org.Python;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 
 public class List extends org.python.types.Object {
-    public java.util.List<org.python.Object> value;
+    public java.util.LinkedList<org.python.Object> value;
+    //public java.util.List<org.python.Object> value;
 
     public java.lang.Object toJava() {
         return this.value;
@@ -28,10 +30,10 @@ public class List extends org.python.types.Object {
 
     public List() {
         super();
-        this.value = new java.util.ArrayList<org.python.Object>();
+        this.value = new java.util.LinkedList<org.python.Object>();
     }
 
-    public List(java.util.List<org.python.Object> list) {
+    public List(java.util.LinkedList<org.python.Object> list) {
         super();
         this.value = list;
     }
@@ -44,23 +46,23 @@ public class List extends org.python.types.Object {
     public List(org.python.Object[] args, java.util.Map<java.lang.String, org.python.Object> kwargs) {
         super();
         if (args[0] == null) {
-            this.value = new java.util.ArrayList<org.python.Object>();
+            this.value = new java.util.LinkedList<org.python.Object>();
         } else if (args.length == 1) {
             if (args[0] instanceof org.python.types.List) {
-                this.value = new java.util.ArrayList<org.python.Object>(
+                this.value = new java.util.LinkedList<org.python.Object>(
                         ((org.python.types.List) args[0]).value
                 );
             } else if (args[0] instanceof org.python.types.Set) {
-                this.value = new java.util.ArrayList<org.python.Object>(
+                this.value = new java.util.LinkedList<org.python.Object>(
                         ((org.python.types.Set) args[0]).value
                 );
             } else if (args[0] instanceof org.python.types.Tuple) {
-                this.value = new java.util.ArrayList<org.python.Object>(
+                this.value = new java.util.LinkedList<org.python.Object>(
                         ((org.python.types.Tuple) args[0]).value
                 );
             } else {
                 org.python.Object iterator = org.Python.iter(args[0]);
-                java.util.List<org.python.Object> generated = new java.util.ArrayList<org.python.Object>();
+                java.util.LinkedList<org.python.Object> generated = new java.util.LinkedList<org.python.Object>();
                 try {
                     while (true) {
                         org.python.Object next = iterator.__next__();
@@ -326,7 +328,7 @@ public class List extends org.python.types.Object {
         try {
             if (index instanceof org.python.types.Slice) {
                 org.python.types.Slice.ValidatedValue slice = ((org.python.types.Slice) index).validateValueTypes();
-                java.util.List<org.python.Object> sliced = new java.util.ArrayList<org.python.Object>();
+                java.util.LinkedList<org.python.Object> sliced = new java.util.LinkedList<org.python.Object>();
 
                 if (slice.start == null && slice.stop == null && slice.step == null) {
                     sliced.addAll(this.value);
@@ -628,7 +630,7 @@ public class List extends org.python.types.Object {
             __doc__ = "L.copy() -> list -- a shallow copy of L"
     )
     public org.python.Object copy() {
-        return new org.python.types.List(new java.util.ArrayList<org.python.Object>(this.value));
+        return new org.python.types.List(new java.util.LinkedList<org.python.Object>(this.value));
     }
 
     @org.python.Method(

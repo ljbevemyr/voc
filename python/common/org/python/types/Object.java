@@ -447,7 +447,7 @@ public class Object extends java.lang.RuntimeException implements org.python.Obj
             __doc__ = "__dir__() -> list\ndefault dir() implementation"
     )
     public org.python.Object __dir__() {
-        org.python.types.List names = new org.python.types.List(new java.util.ArrayList(this.__dict__.keySet()));
+        org.python.types.List names = new org.python.types.List(new java.util.LinkedList(this.__dict__.keySet()));
 
         names.extend(this.__dict__.get("__class__").__dir__());
         names.sort(null, null);

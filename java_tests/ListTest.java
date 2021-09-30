@@ -4,14 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.python.types.Int;
 
 public class ListTest {
     /**
@@ -25,7 +24,8 @@ public class ListTest {
      * list.insert(org.python.types.Int.getInt(2), org.python.types.Int.getInt(3));
      */
     public static org.python.types.List py_list_from_java_ints(Integer... ns) {
-	java.util.List<org.python.Object> list_of_ints = Arrays.stream(ns).map(n -> org.python.types.Int.getInt(n)).collect(Collectors.toList());
+        java.util.LinkedList<org.python.Object> list_of_ints = Arrays.stream(ns).map(n -> org.python.types.Int.getInt(n)).collect(Collectors.toCollection(LinkedList::new));
+
 
 	return new org.python.types.List(list_of_ints);
     }
@@ -207,7 +207,7 @@ public class ListTest {
 	org.python.types.Str string = new org.python.types.Str("hej");
 	list.__iadd__(string);
 
-	ArrayList<org.python.Object> result_list_java = new ArrayList<>();
+	LinkedList<org.python.Object> result_list_java = new LinkedList<>();
 	result_list_java.add(org.python.types.Int.getInt(1));
 	result_list_java.add(org.python.types.Int.getInt(2));
 	result_list_java.add(org.python.types.Int.getInt(3));
@@ -847,7 +847,7 @@ public class ListTest {
 	list.insert(org.python.types.Int.getInt(3), org.python.types.Int.getInt(4));
 
 	// Create new List consisting of Python representations of the integers
-	java.util.List<org.python.Object> java_list_py_objs = java_list.stream().map(n -> org.python.types.Int.getInt(n)).collect(Collectors.toList());
+	java.util.LinkedList<org.python.Object> java_list_py_objs = java_list.stream().map(n -> org.python.types.Int.getInt(n)).collect(Collectors.toCollection(LinkedList::new));
 
 	assertEquals((new org.python.types.List(java_list_py_objs)).toJava(), java_list_py_objs);
 	assertEquals((new org.python.types.List(java_list_py_objs)), list);

@@ -615,7 +615,7 @@ public class ByteArray extends org.python.types.Object {
             __doc__ = "Implement iter(self)."
     )
     public org.python.Object __iter__() {
-        java.util.List<org.python.Object> listOfBytes = new java.util.ArrayList<org.python.Object>();
+        java.util.LinkedList<org.python.Object> listOfBytes = new java.util.LinkedList<org.python.Object>();
         for (byte b: this.value) {
             listOfBytes.add(org.python.types.Int.getInt((long) b & 0xff));
         }

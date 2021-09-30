@@ -351,7 +351,7 @@ public class Super implements org.python.Object {
             __doc__ = "__dir__() -> list\ndefault dir() implementation"
     )
     public org.python.Object __dir__() {
-        org.python.types.List names = new org.python.types.List(new java.util.ArrayList());
+        org.python.types.List names = new org.python.types.List(new java.util.LinkedList());
 
         // names.extend(this.__class__.__dir__());
         // names.sort();

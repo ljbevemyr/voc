@@ -381,7 +381,7 @@ public class Str extends org.python.types.Object {
             __doc__ = "Implement iter(self)."
     )
     public org.python.Object __iter__() {
-        java.util.List<org.python.Object> listOfStrs = new java.util.ArrayList<org.python.Object>();
+        java.util.LinkedList<org.python.Object> listOfStrs = new java.util.LinkedList<org.python.Object>();
         for (int i = 0; i < this.value.length(); i++) {
             listOfStrs.add(new org.python.types.Str(this.value.substring(i, i + 1)));
         }
