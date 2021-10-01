@@ -349,10 +349,15 @@ public class Dict extends org.python.types.Object {
     public org.python.Object update(org.python.Object iterable, org.python.types.Dict kwargs) {
         if (iterable == null) {
             if (kwargs != null) {
-                java.util.Set<org.python.Object> keys = kwargs.keys();
-                for (org.python.Object k : keys) {
-                    org.python.Object value = kwargs.value.get(k);
-                    this.value.put(k, value);
+                org.python.Object iterator = org.Python.iter(kwargs);
+                while (true) {
+                    try {
+                        org.python.Object key = iterator.__next__();
+                        org.python.Object value = kwargs.value.get(key);
+                        this.value.put(key, value);
+                    } catch (org.python.exceptions.StopIteration si) {
+                        break;
+                    }
                 }
             }
         } else if (iterable instanceof org.python.types.Dict) {
