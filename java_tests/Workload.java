@@ -42,16 +42,16 @@ public class Workload {
         Int nine = Int.getInt(9);
         Int ten = Int.getInt(10);
         Map<org.python.Object, org.python.Object> kwargsMap1 = new HashMap<>();
-        kwargsMap.put(a, one);
-        kwargsMap.put(b, two);
-        kwargsMap.put(c, three);
-        kwargsMap.put(d, four);
-        kwargsMap.put(e, five);
-        kwargsMap.put(f, six);
-        kwargsMap.put(g, seven);
-        kwargsMap.put(h, eight);
-        kwargsMap.put(i, nine);
-        kwargsMap.put(j, ten);
+        kwargsMap1.put(a, one);
+        kwargsMap1.put(b, two);
+        kwargsMap1.put(c, three);
+        kwargsMap1.put(d, four);
+        kwargsMap1.put(e, five);
+        kwargsMap1.put(f, six);
+        kwargsMap1.put(g, seven);
+        kwargsMap1.put(h, eight);
+        kwargsMap1.put(i, nine);
+        kwargsMap1.put(j, ten);
         Dict kwargsDictInput1 = new Dict(kwargsMap1);
 
         Str a1 = new Str("aasdfasdfasdfsadf");
@@ -75,16 +75,16 @@ public class Workload {
         Int nine1 = Int.getInt(9);
         Int ten1 = Int.getInt(10);
         Map<org.python.Object, org.python.Object> kwargsMap2 = new HashMap<>();
-        kwargsMap.put(a1, one1);
-        kwargsMap.put(b1, two1);
-        kwargsMap.put(c1, three1);
-        kwargsMap.put(d1, four1);
-        kwargsMap.put(e1, five1);
-        kwargsMap.put(f1, six1);
-        kwargsMap.put(g1, seven1);
-        kwargsMap.put(h1, eight1);
-        kwargsMap.put(i1, nine1);
-        kwargsMap.put(j1, ten1);
+        kwargsMap2.put(a1, one1);
+        kwargsMap2.put(b1, two1);
+        kwargsMap2.put(c1, three1);
+        kwargsMap2.put(d1, four1);
+        kwargsMap2.put(e1, five1);
+        kwargsMap2.put(f1, six1);
+        kwargsMap2.put(g1, seven1);
+        kwargsMap2.put(h1, eight1);
+        kwargsMap2.put(i1, nine1);
+        kwargsMap2.put(j1, ten1);
         Dict kwargsDictInput2 = new Dict(kwargsMap2);
 
         for (int index = 0; index < 1000; index++) {
