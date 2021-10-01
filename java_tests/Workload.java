@@ -1,20 +1,11 @@
 package voc;
 
-import org.junit.Test;
-import org.python.exceptions.AttributeError;
-import org.python.exceptions.KeyError;
-import org.python.exceptions.TypeError;
-import org.python.types.*;
-import org.python.types.List;
-import org.python.types.Object;
-import org.python.types.Set;
+import org.python.types.Dict;
+import org.python.types.Int;
+import org.python.types.Str;
 
-import java.util.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.*;
 
 public class Workload {
     public static void workloadUpdate() {
@@ -87,7 +78,7 @@ public class Workload {
         kwargsMap2.put(j1, ten1);
         Dict kwargsDictInput2 = new Dict(kwargsMap2);
 
-        for (int index = 0; index < 1000; index++) {
+        for (int index = 0; index < 16000000; index++) {
             kwargsDict.update(null, kwargsDictInput1);
             kwargsDict.update(null, kwargsDictInput2);
         }

@@ -178,8 +178,10 @@ public class OrderedDict extends org.python.types.Dict {
     @org.python.Method(
             __doc__ = ""
     )
-    public org.python.Object keys() {
-        return new org.python.stdlib.collections.OrderedDictKeys(this);
+    public java.util.Set<org.python.Object> keys() {
+        // throw new org.python.exceptions.NotImplementedError("dict.keys() has not been
+        // implemented.");
+        return this.value.keySet();
     }
 
     @org.python.Method(
